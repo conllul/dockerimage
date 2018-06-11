@@ -43,6 +43,11 @@ ENV YAP=/home/gopath/src/yap LEX_DIR=/home/gopath/src/yap/data DISPATCH=/home
 ADD dispatch/*.py /home/
 ADD dispatch/*csv /home/
 
+# update yap
+WORKDIR /home/gopath/src/yap
+RUN git pull https://github.com/habeanf/yap
+RUN go build .
+
 # leave a mount dir
 RUN mkdir /local
 WORKDIR /local
