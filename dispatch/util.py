@@ -64,7 +64,7 @@ class YAPDD(MA):
             devnull = open(os.devnull, 'w')
             subprocess_kwargs['stdout'] = devnull
             subprocess_kwargs['stderr'] = devnull
-        command = [self.yap, 'ma', '-dict', "%s.json" % self.lang, '-raw', input_file, '-format', 'ud', '-out', output_file]
+        command = [self.yap, 'ma', '-dict', "%s.json" % os.path.join(self.base_dir, 'data', self.lang), '-raw', input_file, '-format', 'ud', '-out', output_file]
         result = subprocess.call(command, **subprocess_kwargs)
         if result != 0:
             raise Exception("yap failed")

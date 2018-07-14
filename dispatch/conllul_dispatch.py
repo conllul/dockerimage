@@ -74,6 +74,15 @@ def get_lexicon(lang, user_lexicon):
     if len(lang_lexicons) == 1 and not user_lexicon:
         return lang_lexicons[0]
 
+
+def udpipe_pred(lang, input, output):
+    pass
+
+
+def merge(ul_file, ud_file, output):
+    pass
+
+
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description="Dispatcher for CoNLL-UL morphological analysis",
                                      formatter_class=argparse.RawDescriptionHelpFormatter,
@@ -82,6 +91,7 @@ if __name__ == '__main__':
     parser.add_argument("-p", "--provider", help="Use a given MA provider. If a language has a non-baseline provider, that provider will be the default. If multiple providers exist one must be chosen.")
     parser.add_argument("-o", "--options", help="Optional values to pass on to the providers, as a comma-separated list of <key>=<value> pairs")
     parser.add_argument("-q", "--quiet", action="store_true", help="Suppress analyzers' output")
+    # parser.add_argument("-m", "--merge", on="store_true", help="Predict morphology with UDPipe and add the prediction to the lattice")
     parser.add_argument("lang", help="Language name or code (i.e. en or English)")
     parser.add_argument("input", help="Input File")
     parser.add_argument("output", help="Output File")
@@ -102,7 +112,7 @@ if __name__ == '__main__':
     options = defaultdict(None)
     options['quiet'] = args.quiet
     if args.options:
-        option_list = options.split(',')
+        option_list = args.options.split(',')
         user_options = {v.split('=') for v in option_list}
         options.update(user_options)
     if provider == 'udlex':
@@ -112,3 +122,11 @@ if __name__ == '__main__':
     else:
         analyzer = YAPDD(args.lang, **options)
     analyze(analyzer, args.input, args.output, cite=args.nocite)
+    # if args.merge:
+    #     temp_conllul_file = args.output + '.ulpred'
+    #     temp_conllu_file = args.output + '.udpred'
+    #     analyze(analyzer, args.input, temp_conllul_file, cite=args.nocite)
+    #     udpipe_pred(args.lang, args.input, temp_conllu_file)
+    #     merge(temp_conllul_file, temp_conllu_file, args.output)
+    # else:
+    #     analyze(analyzer, args.input, args.output, cite=args.nocite)

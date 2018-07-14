@@ -4,7 +4,7 @@ RUN apt -qq update
 # base installation
 RUN apt -qq -y install python3 python3-pip wget git
 # needed for TRmorph
-RUN apt -qq -y install foma-bin make
+RUN apt -qq -y install foma-bin make gcc
 # install go for yap
 RUN wget https://dl.google.com/go/go1.10.2.linux-amd64.tar.gz -O /tmp/go1.10.2.tar.gz
 RUN tar -C /usr/local -xzf /tmp/go1.10.2.tar.gz
@@ -43,10 +43,11 @@ ENV YAP=/home/gopath/src/yap LEX_DIR=/home/gopath/src/yap/data DISPATCH=/home
 ADD dispatch/*.py /home/
 ADD dispatch/*csv /home/
 
-# update yap
-WORKDIR /home/gopath/src/yap
-RUN git pull https://github.com/habeanf/yap
-RUN go build .
+# get udpipe
+WORKDIR /home
+RUN git clone https://github.com/ufal/udpipe.git
+WORKDIR /home/udpipe/src
+RUN make -j
 
 # leave a mount dir
 RUN mkdir /local
